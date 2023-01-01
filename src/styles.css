@@ -1,6 +1,6 @@
 * {
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 0px;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -65,15 +65,14 @@ body {
   border-radius: 8px;
 }
 
-/* Daily Featured Section Styles */
+/* Trending Section Styles */
 #trending-section-wrapper {
   height: 500px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 5vh;
-  background-color: rgba(20, 20, 20, 0.8);
 }
 
 #trending-content-wrapper {
@@ -99,7 +98,7 @@ body {
 }
 
 .trending-media {
-  min-width: 250px;
+  min-width: 240px;
   height: 350px;
   display: flex;
   background-size: cover;
@@ -114,7 +113,7 @@ body {
 .trending-media::before {
   content: "See More";
   height: 100%;
-  min-width: 250px;
+  min-width: 240px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,6 +128,132 @@ body {
   opacity: 1;
 }
 
+/* Popular Movies Section Styles */
+#popular-movie-section-wrapper {
+  height: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5vh;
+}
+
+#popular-movie-content-wrapper {
+  height: 100%;
+  width: 95%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  overflow: scroll;
+}
+
+#popular-movie-content-wrapper::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+#popular-movie-section-header {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 2rem;
+}
+
+.popular-movie-media {
+  min-width: 240px;
+  height: 350px;
+  display: flex;
+  background-size: cover;
+  border-radius: 10px;
+  transition: 250ms;
+}
+
+.popular-movie-media:hover {
+  cursor: pointer;
+}
+
+.popular-movie-media::before {
+  content: "See More";
+  height: 100%;
+  min-width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+  opacity: 0;
+  border-radius: 10px;
+  background-color: rgba(20, 20, 20, 0.4);
+  transition: 1000ms;
+}
+
+.popular-movie-media:hover::before {
+  opacity: 1;
+}
+
+/* Popular Movies Section Styles */
+#popular-TV-section-wrapper {
+  height: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5vh;
+}
+
+#popular-TV-content-wrapper {
+  height: 100%;
+  width: 95%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  overflow: scroll;
+}
+
+#popular-TV-content-wrapper::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+#popular-TV-section-header {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 2rem;
+}
+
+.popular-TV-media {
+  min-width: 240px;
+  height: 350px;
+  display: flex;
+  background-size: cover;
+  border-radius: 10px;
+  transition: 250ms;
+}
+
+.popular-TV-media:hover {
+  cursor: pointer;
+}
+
+.popular-TV-media::before {
+  content: "See More";
+  height: 100%;
+  min-width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+  opacity: 0;
+  border-radius: 10px;
+  background-color: rgba(20, 20, 20, 0.4);
+  transition: 1000ms;
+}
+
+.popular-TV-media:hover::before {
+  opacity: 1;
+}
+
 /* Individual Item Page Styles */
 #IP-section-wrapper {
   height: 65vh;
@@ -139,10 +264,10 @@ body {
 #IP-main-content-wrapper {
   height: 60vh;
   width: 90vw;
+  margin: auto;
   display: grid;
   grid-template-columns: 30vw 60vw;
   grid-template-rows: auto 0;
-  margin: auto;
   background-color: rgba(20, 20, 20, 0.8);
   border-radius: 10px;
 }
@@ -153,7 +278,7 @@ body {
 
 #IP-poster {
   height: 350px;
-  width: 250px;
+  width: 240px;
   display: flex;
   margin: auto;
   border-radius: 10px;

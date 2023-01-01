@@ -13,6 +13,8 @@ const App = () => {
         <section>
             <NavBar />
             <TrendingDisplay />
+            <PopularMovieDisplay />
+            <PopularTVDisplay />
         </section>
     );
 };
@@ -51,6 +53,7 @@ const TrendingDisplay = () => {
                 const API = "https://api.themoviedb.org/3/trending/movie/day?api_key=30fbb10f72e532c7b0fedd3ffed59864";
                 const response = await fetch(API);
                 const JSONData = await response.json();
+                console.log(JSONData)
                 const data = JSONData.results;
                 console.log("API data for trending display.", data);
                 /* Creating Trending Display */
@@ -62,7 +65,7 @@ const TrendingDisplay = () => {
                     trendingDisplay.append(newMedia)
                     newMedia.addEventListener("click", () => {
                         root.render (
-                            <IndividualMediaPage mediaID={data[i].id}/>
+                            <IndividualMediaPage APIData={data[i]}/>
                         )
                     })
                 }
@@ -79,22 +82,98 @@ const TrendingDisplay = () => {
     );
 };
 
-root.render(
+const PopularMovieDisplay = () => {
+    React.useEffect(() => {
+        async function getTrendingData() {
+            try {
+                /* Getting API Data */
+                const API = "https://api.themoviedb.org/3/movie/popular?api_key=30fbb10f72e532c7b0fedd3ffed59864";
+                const response = await fetch(API);
+                const JSONData = await response.json();
+                const data = JSONData.results;
+                console.log("API data for popular movies display.", data);
+                /* Creating Trending Display */
+                for(let i=0; i<20; i++) {
+                    const popularMovieDisplay = document.getElementById("popular-movie-content-wrapper")
+                    let newMedia = document.createElement("div");
+                    newMedia.classList.add("popular-movie-media")
+                    newMedia.style.backgroundImage = "url(https://www.themoviedb.org/t/p/w500" + data[i].poster_path + ")"
+                    popularMovieDisplay.append(newMedia)
+                    newMedia.addEventListener("click", () => {
+                        root.render (
+                            <IndividualMediaPage mediaType="movie" APIData={data[i]}/>
+                        )
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+            }   
+        } getTrendingData();
+    });
+    return (
+      <section id="popular-movie-section-wrapper">
+        <h2 id="popular-movie-section-header">Popular Movies</h2>
+        <div id="popular-movie-content-wrapper"></div>
+      </section>
+    );
+};
+
+const PopularTVDisplay = () => {
+    React.useEffect(() => {
+        async function getTrendingData() {
+            try {
+                /* Getting API Data */
+                let API = "https://api.themoviedb.org/3/tv/popular?api_key=30fbb10f72e532c7b0fedd3ffed59864";
+                let response = await fetch(API);
+                let JSONData = await response.json();
+                let data = JSONData.results;
+                console.log("API data for popular TV display.", data);
+                /* Creating Trending Display */
+                for(let i=0; i<20; i++) {
+                    const popularTVDisplay = document.getElementById("popular-TV-content-wrapper")
+                    let newMedia = document.createElement("div");
+                    newMedia.classList.add("popular-TV-media")
+                    newMedia.style.backgroundImage = "url(https://www.themoviedb.org/t/p/w500" + data[i].poster_path + ")"
+                    popularTVDisplay.append(newMedia)
+                    newMedia.addEventListener("click", () => {
+                        root.render (
+                            <IndividualMediaPage mediaType="tv" APIData={data[i]}/>
+                        )
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+            }   
+        } getTrendingData();
+    });
+    return (
+      <section id="popular-TV-section-wrapper">
+        <h2 id="popular-TV-section-header">Popular TV Shows</h2>
+        <div id="popular-TV-content-wrapper"></div>
+      </section>
+    );
+};
+
+root.render (
     <App />
 )
 
 
 
 const IndividualMediaPage = (props) => {
+    let data = props.APIData
+    let mediaType = props.mediaType
     React.useEffect(() => {
         async function getMediaData() {
             try {
-                /* Getting API Data */
-                const API = "https://api.themoviedb.org/3/movie/" + props.mediaID + "?api_key=30fbb10f72e532c7b0fedd3ffed59864";
-                const response = await fetch(API);
-                const data = await response.json();
-                document.title = data.title
-                console.log("API data for '" + data.title + "'", data);
+                /* Displaying API Data */
+                if(mediaType == "tv") {
+                    document.title = data.name;
+                    console.log("API data for '" + data.name + "'", data);
+                } else {
+                    document.title = data.title;
+                    console.log("API data for '" + data.title + "'", data);
+                }
             } catch (error) {
                 console.error(error);
             }   
@@ -103,29 +182,37 @@ const IndividualMediaPage = (props) => {
     return (
     <section>
         <NavBar />
-        <IndividualMediaMainSection mediaData={props.mediaID} />
+        <IndividualMediaMainSection mediaType={mediaType} APIData={data} />
     </section>
     )
 }
 
 const IndividualMediaMainSection = (props) => {
+    let data = props.APIData
+    let mediaType = props.mediaType
+    console.log(data)
     React.useEffect(() => {
         async function getMediaData() {
             try {
-                /* Getting API Data */
-                const API = "https://api.themoviedb.org/3/movie/" + props.mediaData + "?api_key=30fbb10f72e532c7b0fedd3ffed59864";
-                const response = await fetch(API);
-                const data = await response.json();
                 /* Assigning Data to DOM Elements */
-                const IPposter = document.getElementById("IP-poster")
-                IPposter.src = "https://www.themoviedb.org/t/p/w500" + data.poster_path
-                const IPtitle = document.getElementById("IP-title")
-                IPtitle.innerHTML = data.title
-                const IPoverview = document.getElementById("IP-overview")
-                IPoverview.innerHTML = data.overview
+                if(mediaType == "tv") {
+                    const IPposter = document.getElementById("IP-poster")
+                    IPposter.src = "https://www.themoviedb.org/t/p/w500" + data.poster_path
+                    const IPtitle = document.getElementById("IP-title")
+                    IPtitle.innerHTML = data.name
+                    const IPoverview = document.getElementById("IP-overview")
+                    IPoverview.innerHTML = data.overview
+                } else {
+                    const IPposter = document.getElementById("IP-poster")
+                    IPposter.src = "https://www.themoviedb.org/t/p/w500" + data.poster_path
+                    const IPtitle = document.getElementById("IP-title")
+                    IPtitle.innerHTML = data.title
+                    const IPoverview = document.getElementById("IP-overview")
+                    IPoverview.innerHTML = data.overview
+                }
             } catch (error) {
                 console.error(error);
-            }   
+            }
         } getMediaData();
     })
     return (
