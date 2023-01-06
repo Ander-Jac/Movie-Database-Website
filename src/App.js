@@ -1,7 +1,10 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
 import "./styles.css"
-import logo from "./img/fakeflix_logo.png"
+import logo from "../public/fakeflix_logo.png"
+import arrow from "../public/arrow.png"
+
+
 const root = createRoot(document.getElementById("root"))
 
 
@@ -47,8 +50,11 @@ return (
 
 const TrendingDisplay = () => {
     React.useEffect(() => {
+        
         async function getTrendingData() {
             try {
+                const contentWrapper = document.getElementById("trending-content-wrapper")
+                const contentWrapperArrow = document.getElementById("trending-content-wrapper-arrow")
                 /* Getting API Data */
                 const API = "https://api.themoviedb.org/3/trending/movie/day?api_key=30fbb10f72e532c7b0fedd3ffed59864";
                 const response = await fetch(API);
@@ -69,6 +75,15 @@ const TrendingDisplay = () => {
                         )
                     })
                 }
+                contentWrapper.addEventListener("scroll", () => {
+                    console.log(contentWrapper.scrollLeft)
+                    if (contentWrapper.scrollLeft > 50) {
+                        contentWrapperArrow.style.opacity = "0"
+                    }  
+                    if (contentWrapper.scrollLeft < 50) {
+                        contentWrapperArrow.style.opacity = ".7"
+                    }  
+                })
             } catch (error) {
                 console.error(error);
             }   
@@ -77,7 +92,9 @@ const TrendingDisplay = () => {
     return (
       <section id="trending-section-wrapper">
         <h2 id="trending-section-header">Trending</h2>
-        <div id="trending-content-wrapper"></div>
+        <div id="trending-content-wrapper">
+            <img src={arrow} id="trending-content-wrapper-arrow"></img>
+        </div>
       </section>
     );
 };
@@ -86,6 +103,8 @@ const PopularMovieDisplay = () => {
     React.useEffect(() => {
         async function getTrendingData() {
             try {
+                const contentWrapper = document.getElementById("popular-movie-content-wrapper")
+                const contentWrapperArrow = document.getElementById("popular-movie-content-wrapper-arrow")
                 /* Getting API Data */
                 const API = "https://api.themoviedb.org/3/movie/popular?api_key=30fbb10f72e532c7b0fedd3ffed59864";
                 const response = await fetch(API);
@@ -105,6 +124,15 @@ const PopularMovieDisplay = () => {
                         )
                     })
                 }
+                contentWrapper.addEventListener("scroll", () => {
+                    console.log(contentWrapper.scrollLeft)
+                    if (contentWrapper.scrollLeft > 50) {
+                        contentWrapperArrow.style.opacity = "0"
+                    }  
+                    if (contentWrapper.scrollLeft < 50) {
+                        contentWrapperArrow.style.opacity = ".7"
+                    }  
+                })
             } catch (error) {
                 console.error(error);
             }   
@@ -113,7 +141,9 @@ const PopularMovieDisplay = () => {
     return (
       <section id="popular-movie-section-wrapper">
         <h2 id="popular-movie-section-header">Popular Movies</h2>
-        <div id="popular-movie-content-wrapper"></div>
+        <div id="popular-movie-content-wrapper">
+            <img src={arrow} id="popular-movie-content-wrapper-arrow"></img>
+        </div>
       </section>
     );
 };
@@ -122,6 +152,8 @@ const PopularTVDisplay = () => {
     React.useEffect(() => {
         async function getTrendingData() {
             try {
+                const contentWrapper = document.getElementById("popular-TV-content-wrapper")
+                const contentWrapperArrow = document.getElementById("popular-TV-content-wrapper-arrow")
                 /* Getting API Data */
                 let API = "https://api.themoviedb.org/3/tv/popular?api_key=30fbb10f72e532c7b0fedd3ffed59864";
                 let response = await fetch(API);
@@ -141,6 +173,15 @@ const PopularTVDisplay = () => {
                         )
                     })
                 }
+                contentWrapper.addEventListener("scroll", () => {
+                    console.log(contentWrapper.scrollLeft)
+                    if (contentWrapper.scrollLeft > 50) {
+                        contentWrapperArrow.style.opacity = "0"
+                    }  
+                    if (contentWrapper.scrollLeft < 50) {
+                        contentWrapperArrow.style.opacity = ".7"
+                    }  
+                })
             } catch (error) {
                 console.error(error);
             }   
@@ -149,7 +190,9 @@ const PopularTVDisplay = () => {
     return (
       <section id="popular-TV-section-wrapper">
         <h2 id="popular-TV-section-header">Popular TV Shows</h2>
-        <div id="popular-TV-content-wrapper"></div>
+        <div id="popular-TV-content-wrapper">
+            <img src={arrow} id="popular-TV-content-wrapper-arrow"></img>
+        </div>
       </section>
     );
 };
