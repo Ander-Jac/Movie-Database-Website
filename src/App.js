@@ -24,6 +24,18 @@ const App = () => {
 
 const NavBar = () => {
     React.useEffect(() => {
+        const moviesButton = document.getElementById("movies-button")
+        moviesButton.addEventListener("click", () => {
+            root.render(
+                <AllMoviesPage />
+            )
+        })
+        const TVButton = document.getElementById("tv-button")
+        TVButton.addEventListener("click", () => {
+            root.render(
+                <AllTVPage />
+            )
+        })
         const navLogo = document.getElementById("nav-logo")
         navLogo.addEventListener("click", () => {
             if(document.title != "Home Page") {
@@ -39,8 +51,8 @@ return (
         <div id="nav-content-wrapper">
             <img src={logo} id="nav-logo"  alt="logo"></img>
             <ul id="nav-menu-list">
-                <div className="nav-list-item">Movies</div>
-                <div className="nav-list-item">TV</div>
+                <div id="movies-button" className="nav-list-item">Movies</div>
+                <div id="tv-button" className="nav-list-item">TV</div>
                 <div className="nav-list-item">People</div>
             </ul>
         </div>
@@ -76,7 +88,6 @@ const TrendingDisplay = () => {
                     })
                 }
                 contentWrapper.addEventListener("scroll", () => {
-                    console.log(contentWrapper.scrollLeft)
                     if (contentWrapper.scrollLeft > 50) {
                         contentWrapperArrow.style.opacity = "0"
                     }  
@@ -125,7 +136,6 @@ const PopularMovieDisplay = () => {
                     })
                 }
                 contentWrapper.addEventListener("scroll", () => {
-                    console.log(contentWrapper.scrollLeft)
                     if (contentWrapper.scrollLeft > 50) {
                         contentWrapperArrow.style.opacity = "0"
                     }  
@@ -174,7 +184,6 @@ const PopularTVDisplay = () => {
                     })
                 }
                 contentWrapper.addEventListener("scroll", () => {
-                    console.log(contentWrapper.scrollLeft)
                     if (contentWrapper.scrollLeft > 50) {
                         contentWrapperArrow.style.opacity = "0"
                     }  
@@ -202,7 +211,7 @@ root.render (
 )
 
 
-
+/*  */
 const IndividualMediaPage = (props) => {
     let data = props.APIData
     let mediaType = props.mediaType
@@ -233,25 +242,36 @@ const IndividualMediaPage = (props) => {
 const IndividualMediaMainSection = (props) => {
     let data = props.APIData
     let mediaType = props.mediaType
-    console.log(data)
     React.useEffect(() => {
         async function getMediaData() {
             try {
                 /* Assigning Data to DOM Elements */
+                const IPposter = document.getElementById("IP-poster")
+                IPposter.src = "https://www.themoviedb.org/t/p/w500" + data.poster_path
+
+                const IPoverview = document.getElementById("IP-overview")
+                IPoverview.innerHTML = data.overview
+
+                const IPrating = document.getElementById("IP-media-rating")
+                IPrating.innerHTML = "Average Rating: " + data.vote_average + "/10"
+
+                const IPadultOrNot = document.getElementById("IP-media-adult-or-not")
+                if(data.adult = "false") {
+                    IPadultOrNot.innerHTML = "For All Audiences"
+                } else {
+                    IPadultOrNot.innerHTML = "For Mature Audiences"
+                }
+                
+
+                const IPreleaseDate = document.getElementById("IP-media-release-date")
+                IPreleaseDate.innerHTML = "Release Date: " + data.release_date
+
                 if(mediaType == "tv") {
-                    const IPposter = document.getElementById("IP-poster")
-                    IPposter.src = "https://www.themoviedb.org/t/p/w500" + data.poster_path
                     const IPtitle = document.getElementById("IP-title")
                     IPtitle.innerHTML = data.name
-                    const IPoverview = document.getElementById("IP-overview")
-                    IPoverview.innerHTML = data.overview
                 } else {
-                    const IPposter = document.getElementById("IP-poster")
-                    IPposter.src = "https://www.themoviedb.org/t/p/w500" + data.poster_path
                     const IPtitle = document.getElementById("IP-title")
                     IPtitle.innerHTML = data.title
-                    const IPoverview = document.getElementById("IP-overview")
-                    IPoverview.innerHTML = data.overview
                 }
             } catch (error) {
                 console.error(error);
@@ -268,9 +288,39 @@ const IndividualMediaMainSection = (props) => {
                 <div id="IP-main-content-right">
                     <h2 id="IP-title"></h2>
                     <div id="IP-overview"></div>
-                    <div>Example Text</div>
+                    <section id="IP-main-content-right-bottom">
+                        <div id="IP-media-rating">popularity</div>
+                        <div id="IP-media-release-date">Release date</div>
+                        <div id="IP-media-adult-or-not">Adult or not</div>
+                    </section>
                 </div>
             </div>
         </section>
     )
 }
+
+
+const AllMoviesPage = () => {
+    React.useEffect(() => {
+        document.title = "Movies"
+    })
+    return (
+        <section>
+            <NavBar />
+            <PopularMovieDisplay />
+        </section>
+    );
+};
+
+
+const AllTVPage = () => {
+    React.useEffect(() => {
+        document.title = "TV Shows"
+    })
+    return (
+        <section>
+            <NavBar />
+            <PopularTVDisplay />
+        </section>
+    );
+};
