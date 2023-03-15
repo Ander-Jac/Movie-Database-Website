@@ -1,5 +1,7 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
+import { useRef } from 'react';
+import Slider from "react-slick"
 import "./styles.css"
 import logo from "../public/fakeflix_logo.png"
 import arrow from "../public/arrow.png"
@@ -15,7 +17,6 @@ const App = () => {
     return (
         <section>
             <NavBar />
-            <TrendingDisplay />
             <PopularMovieDisplay />
             <PopularTVDisplay />
         </section>
@@ -53,7 +54,6 @@ return (
             <ul id="nav-menu-list">
                 <div id="movies-button" className="nav-list-item">Movies</div>
                 <div id="tv-button" className="nav-list-item">TV</div>
-                <div className="nav-list-item">People</div>
             </ul>
         </div>
     </section>
@@ -61,54 +61,66 @@ return (
 };
 
 const TrendingDisplay = () => {
-    React.useEffect(() => {
-        
-        async function getTrendingData() {
-            try {
-                const contentWrapper = document.getElementById("trending-content-wrapper")
-                const contentWrapperArrow = document.getElementById("trending-content-wrapper-arrow")
-                /* Getting API Data */
-                const API = "https://api.themoviedb.org/3/trending/movie/day?api_key=30fbb10f72e532c7b0fedd3ffed59864";
-                const response = await fetch(API);
-                const JSONData = await response.json();
-                console.log(JSONData)
-                const data = JSONData.results;
-                console.log("API data for trending display.", data);
-                /* Creating Trending Display */
-                for(let i=0; i<20; i++) {
-                    const trendingDisplay = document.getElementById("trending-content-wrapper")
-                    let newMedia = document.createElement("div");
-                    newMedia.classList.add("trending-media")
-                    newMedia.style.backgroundImage = "url(https://www.themoviedb.org/t/p/w500" + data[i].poster_path + ")"
-                    trendingDisplay.append(newMedia)
-                    newMedia.addEventListener("click", () => {
-                        root.render (
-                            <IndividualMediaPage APIData={data[i]}/>
-                        )
-                    })
-                }
-                contentWrapper.addEventListener("scroll", () => {
-                    if (contentWrapper.scrollLeft > 50) {
-                        contentWrapperArrow.style.opacity = "0"
-                    }  
-                    if (contentWrapper.scrollLeft < 50) {
-                        contentWrapperArrow.style.opacity = ".7"
-                    }  
-                })
-            } catch (error) {
-                console.error(error);
-            }   
-        } getTrendingData();
+    const settings = React.useState({
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
     });
+    React.useEffect(() => {
+      async function getTrendingData() {
+        try {
+          /* Getting API Data */
+          const API =
+            "https://api.themoviedb.org/3/trending/movie/day?api_key=30fbb10f72e532c7b0fedd3ffed59864";
+          const response = await fetch(API);
+          const JSONData = await response.json();
+          const data = JSONData.results;
+          console.log("API data for trending display.", data);
+          /* Creating Trending Display */
+          const trendingDisplay = document.querySelector(".slick-track");
+          trendingDisplay.slick();
+          console.log(trendingDisplay);
+          for (let i = 0; i < 20; i++) {
+            /* Creating Elements */
+            let newMediaContainer = document.createElement("div");
+            let newMediaBackdrop = document.createElement("div");
+            let newMediaInfo = document.createElement("div");
+            let newMediaTitle = document.createElement("h2");
+            let newMediaOverview = document.createElement("div");
+            newMediaContainer.classList.add("trending-media-container");
+            newMediaBackdrop.classList.add("trending-media-backdrop");
+            newMediaInfo.classList.add("trending-media-info");
+            /* Creating Element Styles */
+            newMediaBackdrop.style.backgroundImage = "url(https://www.themoviedb.org/t/p/w780" + data[i].backdrop_path + ")";
+            /* Tying Elements Together */
+            newMediaContainer.append(newMediaBackdrop);
+            newMediaContainer.append(newMediaInfo);
+            trendingDisplay.appendChild(newMediaContainer);
+            newMediaInfo.append(newMediaTitle);
+            newMediaInfo.append(newMediaOverview);
+            newMediaTitle.innerHTML = data[i].title;
+            newMediaOverview.innerHTML = data[i].overview;
+            /* Event Listener for IP Render */
+            newMediaContainer.addEventListener("click", () => {
+              root.render(<IndividualMediaPage APIData={data[i]} />);
+            });
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      getTrendingData();
+    }, []);
+  
     return (
       <section id="trending-section-wrapper">
         <h2 id="trending-section-header">Trending</h2>
-        <div id="trending-content-wrapper">
-            <img src={arrow} id="trending-content-wrapper-arrow"></img>
-        </div>
+        <Slider {...settings}></Slider>
       </section>
     );
-};
+  };
 
 const PopularMovieDisplay = () => {
     React.useEffect(() => {
@@ -264,7 +276,7 @@ const IndividualMediaMainSection = (props) => {
                 
 
                 const IPreleaseDate = document.getElementById("IP-media-release-date")
-                IPreleaseDate.innerHTML = "Release Date: " + data.release_date
+                IPreleaseDate.innerHTML = "Release Date: " + data.first_air_date
 
                 if(mediaType == "tv") {
                     const IPtitle = document.getElementById("IP-title")
